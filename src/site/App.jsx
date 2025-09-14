@@ -1,3 +1,8 @@
+import { /* ...existing icons..., */ Menu } from "lucide-react";
+
+// inside your component, near the top:
+const [open, setOpen] = React.useState(false);
+
 import React from "react";
 import { motion } from "framer-motion";
 import {
@@ -28,22 +33,74 @@ export default function OnePageSite() {
     <div className="min-h-screen bg-white text-slate-800 selection:bg-indigo-200/60">
       {/* NAV */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <a href="#home" className="font-bold text-xl tracking-tight">
-            Techno <span className="text-indigo-600">AI</span> Marketing & IT
+  <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="#home" className="font-bold text-xl tracking-tight">
+      Techno <span className="text-indigo-600">AI</span> Marketing & IT
+    </a>
+
+    {/* Desktop nav */}
+    <nav className="hidden md:flex gap-6 text-sm">
+      <a href="#services" className="hover:text-indigo-600">Services</a>
+      <a href="#packages" className="hover:text-indigo-600">Packages</a>
+      <a href="#owner" className="hover:text-indigo-600">Owner.com</a>
+      <a href="#performance" className="hover:text-indigo-600">Performance</a>
+      <a href="#contact" className="hover:text-indigo-600">Contact</a>
+    </nav>
+
+    {/* Desktop CTA */}
+    <a
+      href="#contact"
+      className="hidden md:inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-4 py-2 text-white shadow-sm hover:bg-indigo-700"
+    >
+      <Rocket className="w-4 h-4" /> Free Consult
+    </a>
+
+    {/* Mobile hamburger */}
+    <button
+      className="md:hidden p-2 rounded-xl border hover:bg-slate-50"
+      aria-label="Open menu"
+      aria-expanded={open}
+      aria-controls="mobile-menu"
+      onClick={() => setOpen((v) => !v)}
+    >
+      <Menu className={`w-5 h-5 transition-transform ${open ? "rotate-90" : ""}`} />
+    </button>
+  </div>
+
+  {/* Mobile menu (shown when open) */}
+  {open && (
+    <div id="mobile-menu" className="md:hidden border-t bg-white">
+      <div className="max-w-6xl mx-auto px-4 py-3 grid gap-2 text-sm">
+        {[
+          ["#services", "Services"],
+          ["#packages", "Packages"],
+          ["#owner", "Owner.com"],
+          ["#performance", "Performance"],
+          ["#contact", "Contact"],
+        ].map(([href, label]) => (
+          <a
+            key={href}
+            href={href}
+            className="py-2 hover:text-indigo-600"
+            onClick={() => setOpen(false)}  // close after tap
+          >
+            {label}
           </a>
-          <nav className="hidden md:flex gap-6 text-sm">
-            <a href="#services" className="hover:text-indigo-600">Services</a>
-            <a href="#packages" className="hover:text-indigo-600">Packages</a>
-            <a href="#owner" className="hover:text-indigo-600">Owner.com</a>
-            <a href="#performance" className="hover:text-indigo-600">Performance</a>
-            <a href="#contact" className="hover:text-indigo-600">Contact</a>
-          </nav>
-          <a href="#contact" className="hidden md:inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-4 py-2 text-white shadow-sm hover:bg-indigo-700">
-            <Rocket className="w-4 h-4"/> Free Consult
-          </a>
-        </div>
-      </header>
+        ))}
+
+        {/* Mobile CTA */}
+        <a
+          href="#contact"
+          onClick={() => setOpen(false)}
+          className="mt-2 inline-flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-4 py-2 text-white shadow-sm hover:bg-indigo-700"
+        >
+          <Rocket className="w-4 h-4" /> Free Consult
+        </a>
+      </div>
+    </div>
+  )}
+</header>
+
 
       {/* HERO */}
       <section id="home" className="relative overflow-hidden">
