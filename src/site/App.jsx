@@ -31,71 +31,6 @@ const fade = (delay = 0) => ({
 export default function OnePageSite() {
   const [open, setOpen] = React.useState(false);
 
-  // ---- Contact form state ----
-  const [form, setForm] = React.useState({
-    name: "",
-    email: "",
-    business: "",
-    service: "",
-    message: "",
-    botfield: "", // honeypot
-  });
-  const [loading, setLoading] = React.useState(false);
-  const [status, setStatus] = React.useState({ ok: null, msg: "" });
-
-  // Replace with your real Formspree endpoint id, e.g. https://formspree.io/f/abcdwxyz
-  const FORMSPREE_ENDPOINT = "https://formspree.io/f/https://formspree.io/f/xgvlbvbv";
-
-  function onChange(e) {
-    const { name, value } = e.target;
-    setForm((s) => ({ ...s, [name]: value }));
-  }
-
-  async function onSubmit(e) {
-    e.preventDefault();
-    setStatus({ ok: null, msg: "" });
-
-    // basic validation
-    if (!form.name || !form.email || !form.service) {
-      setStatus({ ok: false, msg: "Please fill name, email, and service." });
-      return;
-    }
-    // honeypot check
-    if (form.botfield) return;
-
-    try {
-      setLoading(true);
-      const res = await fetch(FORMSPREE_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          business: form.business,
-          service: form.service,
-          message: form.message,
-          _subject: "New Free Consultation Request",
-          _from: "Techno AI Marketing & IT Website",
-        }),
-      });
-
-      if (res.ok) {
-        setStatus({ ok: true, msg: "Thanks! We received your request and will contact you shortly." });
-        setForm({ name: "", email: "", business: "", service: "", message: "", botfield: "" });
-      } else {
-        const data = await res.json().catch(() => ({}));
-        setStatus({
-          ok: false,
-          msg: data?.error || "Something went wrong. Please try again or email us directly.",
-        });
-      }
-    } catch (err) {
-      setStatus({ ok: false, msg: "Network error. Please check your connection and try again." });
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
     <div className="min-h-screen bg-white text-slate-800 selection:bg-indigo-200/60">
       {/* NAV */}
@@ -536,25 +471,25 @@ export default function OnePageSite() {
             </ul>
           </div>
 
-          {/* Working contact form */}
-          <form onSubmit={onSubmit} className="rounded-2xl bg-white p-6 shadow-sm border">
-            {/* Honeypot (hidden) */}
-            <input
-              type="text"
-              name="botfield"
-              value={form.botfield}
-              onChange={onChange}
-              className="hidden"
-              tabIndex="-1"
-              autoComplete="off"
-            />
+          {/* Working contact form (native POST to Formspree) */}
+          <form
+            action="https://formspree.io/f/xgvlbvbv"
+            method="POST"
+            className="rounded-2xl bg-white p-6 shadow-sm border"
+          >
+            {/* Subject / metadata */}
+            <input type="hidden" name="_subject" value="New Free Consultation Request" />
+            <input type="hidden" name="_from" value="Techno AI Marketing & IT Website" />
+            {/* If you want to redirect after submit, set your full URL here:
+                <input type="hidden" name="_next" value="https://YOUR-DOMAIN.com/thanks" /> */}
+
+            {/* Honeypot (spam protection) */}
+            <input type="text" name="bot-field" className="hidden" tabIndex="-1" autoComplete="off" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 name="name"
                 placeholder="Full name"
-                value={form.name}
-                onChange={onChange}
                 className="rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 required
               />
@@ -562,22 +497,16 @@ export default function OnePageSite() {
                 name="email"
                 type="email"
                 placeholder="Email"
-                value={form.email}
-                onChange={onChange}
                 className="rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 required
               />
               <input
                 name="business"
                 placeholder="Business name"
-                value={form.business}
-                onChange={onChange}
                 className="rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 md:col-span-2"
               />
               <select
                 name="service"
-                value={form.service}
-                onChange={onChange}
                 className="rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 md:col-span-2"
                 required
               >
@@ -591,32 +520,16 @@ export default function OnePageSite() {
                 name="message"
                 rows={4}
                 placeholder="Goals / questions"
-                value={form.message}
-                onChange={onChange}
                 className="rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 md:col-span-2"
               />
             </div>
 
             <button
               type="submit"
-              disabled={loading}
-              className="mt-4 w-full rounded-2xl bg-indigo-600 py-3 text-white font-semibold hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="mt-4 w-full rounded-2xl bg-indigo-600 py-3 text-white font-semibold hover:bg-indigo-700"
             >
-              {loading ? "Sending..." : "Send"}
+              Send
             </button>
-
-            {/* Status message */}
-            {status.msg && (
-              <div
-                className={`mt-3 text-sm ${
-                  status.ok ? "text-emerald-700" : "text-rose-700"
-                }`}
-                role="status"
-                aria-live="polite"
-              >
-                {status.msg}
-              </div>
-            )}
 
             <p className="mt-2 text-xs text-slate-500">
               By submitting, you agree to be contacted about your inquiry.
