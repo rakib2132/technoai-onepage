@@ -31,6 +31,58 @@ const fade = (delay = 0) => ({
 export default function OnePageSite() {
   const [open, setOpen] = React.useState(false);
 
+  // -------- Contact form (controlled) --------
+  const [form, setForm] = React.useState({
+    name: "",
+    email: "",
+    business: "",
+    service: "",
+    message: "",
+  });
+  const [justSubmitted, setJustSubmitted] = React.useState(false);
+  const formRef = React.useRef(null);
+
+  // Build _next URL so Formspree redirects back here with ?thanks=1#contact
+  const nextUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}${window.location.pathname}?thanks=1#contact`
+      : "";
+
+  // On first load, show success if redirected back from Formspree
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("thanks") === "1") {
+      setJustSubmitted(true);
+      // Clear form state
+      setForm({ name: "", email: "", business: "", service: "", message: "" });
+      // Also clear the actual DOM inputs (in case browser tries to restore)
+      if (formRef.current) formRef.current.reset?.();
+      // Optionally clean URL so ?thanks=1 disappears after a moment
+      const t = setTimeout(() => {
+        window.history.replaceState({}, "", window.location.pathname + "#contact");
+      }, 1500);
+      return () => clearTimeout(t);
+    }
+  }, []);
+
+  // If user navigates back and the page is restored from bfcache, force-clear the fields
+  React.useEffect(() => {
+    function handlePageShow(e) {
+      if (e.persisted) {
+        setForm({ name: "", email: "", business: "", service: "", message: "" });
+        if (formRef.current) formRef.current.reset?.();
+      }
+    }
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
+  function onChange(e) {
+    const { name, value } = e.target;
+    setForm((s) => ({ ...s, [name]: value }));
+  }
+
   return (
     <div className="min-h-screen bg-white text-slate-800 selection:bg-indigo-200/60">
       {/* NAV */}
@@ -469,27 +521,36 @@ export default function OnePageSite() {
                 <Mail className="w-4 h-4 mt-0.5 text-indigo-600" /> info@technoaimarketing.com
               </li>
             </ul>
+
+            {justSubmitted && (
+              <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800 text-sm">
+                ✅ Thanks! We received your request and will contact you shortly.
+              </div>
+            )}
           </div>
 
-          {/* Working contact form (native POST to Formspree) */}
+          {/* Native POST to Formspree with redirect back */}
           <form
+            ref={formRef}
             action="https://formspree.io/f/xgvlbvbv"
             method="POST"
             className="rounded-2xl bg-white p-6 shadow-sm border"
+            autoComplete="off"
           >
             {/* Subject / metadata */}
             <input type="hidden" name="_subject" value="New Free Consultation Request" />
             <input type="hidden" name="_from" value="Techno AI Marketing & IT Website" />
-            {/* If you want to redirect after submit, set your full URL here:
-                <input type="hidden" name="_next" value="https://YOUR-DOMAIN.com/thanks" /> */}
-
-            {/* Honeypot (spam protection) */}
+            {/* Redirect back here with success flag */}
+            <input type="hidden" name="_next" value={nextUrl} />
+            {/* Honeypot */}
             <input type="text" name="bot-field" className="hidden" tabIndex="-1" autoComplete="off" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 name="name"
                 placeholder="Full name"
+                value={form.name}
+                onChange={onChange}
                 className="rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 required
               />
@@ -497,16 +558,22 @@ export default function OnePageSite() {
                 name="email"
                 type="email"
                 placeholder="Email"
+                value={form.email}
+                onChange={onChange}
                 className="rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 required
               />
               <input
                 name="business"
                 placeholder="Business name"
+                value={form.business}
+                onChange={onChange}
                 className="rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 md:col-span-2"
               />
               <select
                 name="service"
+                value={form.service}
+                onChange={onChange}
                 className="rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 md:col-span-2"
                 required
               >
@@ -520,6 +587,8 @@ export default function OnePageSite() {
                 name="message"
                 rows={4}
                 placeholder="Goals / questions"
+                value={form.message}
+                onChange={onChange}
                 className="rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 md:col-span-2"
               />
             </div>
