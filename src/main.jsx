@@ -1,22 +1,21 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import Site from './site/App.jsx'
-
-import Terms from "./site/Terms.jsx";
-import Privacy from "./site/Privacy.jsx";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import OnePageSite from "./site/App.jsx";
+import Privacy from "./site/Privacy.jsx";
+import Terms from "./site/Terms.jsx";
+import Thanks from "./site/Thanks.jsx";
+import "./index.css";
 
-createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Site />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<OnePageSite />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/thanks" element={<Thanks />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
-)
-
-<BrowserRouter>
-  <Routes>
-    <Route path="/" element={<OnePageSite />} />
-    <Route path="/privacy" element={<Privacy />} />
-    <Route path="/terms" element={<Terms />} />
-  </Routes>
-</BrowserRouter>
+);
