@@ -608,7 +608,9 @@ export default function OnePageSite() {
       </section>
 
       <footer className="py-10 text-center text-sm text-slate-500">
-        © {new Date().getFullYear()} Techno AI Marketing & IT LLC • Malvern, PA
+       © {new Date().getFullYear()} Techno AI Marketing & IT LLC • Malvern, PA ·{" "}
+       <a href="/privacy" className="hover:text-indigo-600">Privacy Policy</a> ·{" "}
+       <a href="/terms" className="hover:text-indigo-600">Terms of Service</a>
       </footer>
     </div>
   );
