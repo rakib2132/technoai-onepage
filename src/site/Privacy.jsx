@@ -31,7 +31,7 @@ export default function Privacy() {
           We do <b>not</b> sell your personal information. We may share your data only with:
         </p>
         <ul className="list-disc ml-6 space-y-1">
-          <li>Service providers (such as Formspree for contact form handling, or email providers).</li>
+          <li>Service providers (such as Formspree or email providers).</li>
           <li>Legal authorities if required by law.</li>
         </ul>
 
@@ -57,30 +57,23 @@ export default function Privacy() {
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-3">7. Third-Party Links</h2>
-        <p>
-          Our website may link to third-party websites. We are not responsible for the privacy practices of those sites.
-        </p>
+        <p>Our website may link to third-party websites. We are not responsible for their privacy practices.</p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-3">8. Children’s Privacy</h2>
-        <p>
-          Our services are not directed at children under 13, and we do not knowingly collect personal information from them.
-        </p>
+        <p>Our services are not directed at children under 13, and we do not knowingly collect data from them.</p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-3">9. Updates to This Policy</h2>
-        <p>
-          We may update this Privacy Policy from time to time. The updated version will always be posted here with a new “Last updated” date.
-        </p>
+        <p>We may update this page. The updated version will show a new “Last updated” date.</p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-3">10. Contact Us</h2>
         <p>
-          If you have questions about this Privacy Policy, contact us at:
+          Questions? Contact:
           <br />📧 <b>info@technoaimarketing.com</b>
           <br />📍 Malvern, PA, USA
         </p>
 
         <p className="mt-10 text-xs text-slate-500">
-          ⚠️ Disclaimer: This template is provided for informational purposes and is not legal advice. If you
-          operate in regions with stricter laws (GDPR, CCPA), consult a qualified attorney.
+          Disclaimer: This template is informational and not legal advice.
         </p>
       </div>
     </div>
