@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import React from "react";
 import { motion } from "framer-motion";
 import {
@@ -608,9 +609,9 @@ export default function OnePageSite() {
       </section>
 
       <footer className="py-10 text-center text-sm text-slate-500">
-       © {new Date().getFullYear()} Techno AI Marketing & IT LLC • Malvern, PA ·{" "}
-       <a href="/privacy" className="hover:text-indigo-600">Privacy Policy</a> ·{" "}
-       <a href="/terms" className="hover:text-indigo-600">Terms of Service</a>
+  	© {new Date().getFullYear()} Techno AI Marketing & IT LLC • Malvern, PA ·{" "}
+  	<Link to="/privacy" className="hover:text-indigo-600">Privacy Policy</Link> ·{" "}
+  	<Link to="/terms" className="hover:text-indigo-600">Terms of Service</Link>
       </footer>
     </div>
   );
